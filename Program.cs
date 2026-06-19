@@ -10,37 +10,19 @@ namespace ChaosSeparatedValues
     {
         public static void Main(string[] args)
         {
-            // Phase 1: Generate synthetic mailing data and export to CSV
-
             Logger.Info("Program started");
 
             string outputDirectory = "Data";
             Directory.CreateDirectory(outputDirectory);
-            string filePath = Path.Combine(outputDirectory, "mailing.csv");
 
+            string filePath = Path.Combine(outputDirectory, "mailing.csv");
             Logger.Info($"Output file: {filePath}");
 
-            using var writer = new StreamWriter(filePath);
-            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-
-            csv.WriteHeader<MailingRecord>();
-            csv.NextRecord();
 
             int recordCount = 10000;
-
             Logger.Info($"Requested record count: {recordCount:N0}");
 
-            for (int i = 0; i < recordCount; i++)
-            {
-                var record = Generator.Generate();
-                csv.WriteRecord(record);
-                csv.NextRecord();
-
-                if (i % 1000 == 0 && i != 0)
-                {
-                    Logger.Info($"Generated {i:N0} records");
-                }
-            }
+            CsvExporter.Export(filePath, recordCount);
 
             Logger.Info($"Finished generating {recordCount:N0} records");
         }
