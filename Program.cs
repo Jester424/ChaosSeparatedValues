@@ -21,9 +21,13 @@ public class Program
     {
         // Phase 1: Generate synthetic mailing data and export to CSV
 
+        Logger.Info("Program started");
+
         string outputDirectory = "Data";
         Directory.CreateDirectory(outputDirectory);
         string filePath = Path.Combine(outputDirectory, "mailing.csv");
+
+        Logger.Info($"Output file: {filePath}");
 
 
         var faker = new Faker<MailingRecord>()
@@ -42,13 +46,49 @@ public class Program
         csv.NextRecord();
 
         int recordCount = 10000;
+
+        Logger.Info($"Requested record count: {recordCount:N0}");
+
         for (int i = 0; i < recordCount; i++)
         {
             var record = faker.Generate();
             csv.WriteRecord(record);
             csv.NextRecord();
+
+            if (i % 1000 == 0 && i != 0)
+            {
+                Logger.Info($"Generated {i:N0} records");
+            }
         }
 
-        Console.WriteLine($"Generated {recordCount:N0} records to {filePath}");
+        Logger.Info($"Finished generating {recordCount:N0} records");
+    }
+
+    public static class Logger
+    {
+        private static readonly string logDirectory = "Logs";
+        private static readonly string logFile = Path.Combine(logDirectory, $"run-{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
+
+        static Logger()
+        {
+            Directory.CreateDirectory(logDirectory);
+        }
+
+        public static void Info(string message)
+        {
+            Write("INFO", message);
+        }
+
+        public static void Error(string message)
+        {
+            Write("ERROR", message);
+        }
+
+        private static void Write(string level, string message)
+        {
+            string logLine = $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss} [{level}] {message}";
+            File.AppendAllText(logFile, logLine + Environment.NewLine);
+            Console.WriteLine(logLine);
+        }
     }
 }
