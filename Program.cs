@@ -35,13 +35,20 @@ public class Program
             .RuleFor(x => x.State, f => f.Address.StateAbbr())
             .RuleFor(x => x.Zip, f => f.Address.ZipCode());
 
-        int recordCount = 10000;
-        List<MailingRecord> records = faker.Generate(recordCount);
         using var writer = new StreamWriter(filePath);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
 
-        csv.WriteRecords(records);
+        csv.WriteHeader<MailingRecord>();
+        csv.NextRecord();
 
-        Console.WriteLine($"Created {records.Count:N0} records");
+        int recordCount = 10000;
+        for (int i = 0; i < recordCount; i++)
+        {
+            var record = faker.Generate();
+            csv.WriteRecord(record);
+            csv.NextRecord();
+        }
+
+        Console.WriteLine($"Generated {recordCount:N0} records to {filePath}");
     }
 }
