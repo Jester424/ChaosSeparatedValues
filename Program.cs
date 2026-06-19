@@ -76,19 +76,31 @@ public class Program
 
         public static void Info(string message)
         {
-            Write("INFO", message);
+            Write("INFO", message, ConsoleColor.Green);
         }
 
         public static void Error(string message)
         {
-            Write("ERROR", message);
+            Write("ERROR", message, ConsoleColor.Red);
         }
 
-        private static void Write(string level, string message)
+        private static void Write(string level, string message, ConsoleColor color)
         {
-            string logLine = $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss} [{level}] {message}";
+            string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            string logLine = $"{time} {level,-5} {message}";
+
+            // Console output
+            Console.Write($"{time} ");
+
+            Console.ForegroundColor = color;
+            Console.Write($"{level,-5}");
+            Console.ResetColor();
+
+            Console.WriteLine($" {message}");
+
+            // File output
             File.AppendAllText(logFile, logLine + Environment.NewLine);
-            Console.WriteLine(logLine);
         }
     }
 }
