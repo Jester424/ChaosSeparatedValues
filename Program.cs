@@ -43,5 +43,7 @@ public class Program
         csv.WriteRecords(records);
 
         Console.WriteLine($"Created {records.Count:N0} records");
+
+        // Hello world
     }
 }
