@@ -2,27 +2,28 @@
 
 namespace ChaosSeparatedValues
 {
-    public static class Logger
+    public class Logger
     {
-        private static readonly string logDirectory = "Logs";
-        private static readonly string logFile = Path.Combine(logDirectory, $"run-{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
+        private readonly string logFile;
 
-        static Logger()
+        public Logger(AppContext appContext)
         {
-            Directory.CreateDirectory(logDirectory);
+            logFile = Path.Combine(
+                appContext.RunName,
+                $"{appContext.RunName}.log");
         }
 
-        public static void Info(string message)
+        public void Info(string message)
         {
             Write("INFO", message, ConsoleColor.Green);
         }
 
-        public static void Error(string message)
+        public void Error(string message)
         {
             Write("ERROR", message, ConsoleColor.Red);
         }
 
-        private static void Write(string level, string message, ConsoleColor color)
+        private void Write(string level, string message, ConsoleColor color)
         {
             string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 

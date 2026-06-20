@@ -10,26 +10,30 @@ namespace ChaosSeparatedValues
     {
         public static void Main(string[] args)
         {
-            Logger.Info("Program started");
+            var appContext = new AppContext();
 
-            string outputDirectory = "Data";
+            string outputDirectory = appContext.RunName;
             Directory.CreateDirectory(outputDirectory);
+            
+            var logger = new Logger(appContext);
+
+            logger.Info("Program started");
 
             string cleanFilePath = Path.Combine(outputDirectory, "clean_list.csv");
-            Logger.Info($"Clean output file: {cleanFilePath}");
+            logger.Info($"Clean output file: {cleanFilePath}");
 
 
             int recordCount = 10000;
-            Logger.Info($"Requested record count: {recordCount:N0}");
+            logger.Info($"Requested record count: {recordCount:N0}");
 
-            CsvExporter.Export(cleanFilePath, recordCount);
+            CsvExporter.Export(cleanFilePath, recordCount, logger);
 
-            Logger.Info($"Finished generating {recordCount:N0} records");
-            Logger.Info($"Beginning data degradation");
+            logger.Info($"Finished generating {recordCount:N0} records");
+            logger.Info($"Beginning data degradation");
             Thread.Sleep(2000);
 
             string degradedFilePath = Path.Combine(outputDirectory, "degraded_list.csv");
-            Logger.Info($"Degraded output file: {degradedFilePath}");
+            logger.Info($"Degraded output file: {degradedFilePath}");
 
             using var reader = new StreamReader(cleanFilePath);
             using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -55,7 +59,7 @@ namespace ChaosSeparatedValues
                 csvWriter.NextRecord();
             }
 
-            Logger.Info($"Degradation complete for {degradedRecordCount} records");
+            logger.Info($"Degradation complete for {degradedRecordCount} records");
         }
     }
 }

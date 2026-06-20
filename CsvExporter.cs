@@ -7,7 +7,7 @@ namespace ChaosSeparatedValues
 {
     public static class CsvExporter
     {
-        public static void Export(string filePath, int recordCount)
+        public static void Export(string filePath, int recordCount, Logger logger)
         {
             using var writer = new StreamWriter(filePath);
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
@@ -24,7 +24,7 @@ namespace ChaosSeparatedValues
 
                 if (i % 1000 == 0 && i != 0)
                 {
-                    Logger.Info($"Generated {i:N0} records");
+                    logger.Info($"Generated {i:N0} records");
                 }
             }
         }
