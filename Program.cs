@@ -64,8 +64,7 @@ namespace ChaosSeparatedValues
             using var writer = new StreamWriter(degradedFilePath);
             using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
 
-            csvWriter.WriteHeader<MailingRecord>();
-            csvWriter.NextRecord();
+            CsvExporter.WriteHeader(csvWriter);
 
             double degradationRate = 0.10;
 
@@ -81,8 +80,7 @@ namespace ChaosSeparatedValues
                     degradedRecordCount++;
                     DataDegrader.Degrade(record);
                 }
-                csvWriter.WriteRecord(record);
-                csvWriter.NextRecord();
+                CsvExporter.WriteRecord(csvWriter, record);
             }
             logger.Info($"Read {totalRecords} records");
             logger.Info($"Degradation complete for {degradedRecordCount} records");
