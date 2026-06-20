@@ -37,6 +37,10 @@ namespace ChaosSeparatedValues
             GenerateDegradedDataFile(logger, cleanFilePath, degradedFilePath);
         }
 
+
+
+
+
         private static void GenerateCleanDataFile(Logger logger, string cleanFilePath, int recordCount)
         {
             logger.Info($"Requested record count: {recordCount:N0}");
@@ -55,6 +59,10 @@ namespace ChaosSeparatedValues
                 }
             }
         }
+
+
+
+
 
         private static void GenerateDegradedDataFile(Logger logger, string cleanFilePath, string degradedFilePath)
         {
@@ -82,8 +90,8 @@ namespace ChaosSeparatedValues
                 }
                 CsvExporter.WriteRecord(csvWriter, record);
             }
-            logger.Info($"Read {totalRecords} records");
-            logger.Info($"Degradation complete for {degradedRecordCount} records");
+            logger.Info($"Read {totalRecords:N0} records");
+            logger.Info($"Degradation complete for {degradedRecordCount:N0} records");
         }
     }
 }
