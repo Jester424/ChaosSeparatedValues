@@ -17,14 +17,14 @@ namespace ChaosSeparatedValues
 
             for (int i = 0; i < recordCount; i++)
             {
-                var record = Generator.Generate(recordCount);
+                var record = Generator.Generate();
 
                 csv.WriteRecord(record);
                 csv.NextRecord();
 
                 if (i % 1000 == 0 && i != 0)
                 {
-                    Logger.Info($"Generated {i:N0} retcords");
+                    Logger.Info($"Generated {i:N0} records");
                 }
             }
         }

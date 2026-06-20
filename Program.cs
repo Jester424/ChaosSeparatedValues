@@ -15,14 +15,14 @@ namespace ChaosSeparatedValues
             string outputDirectory = "Data";
             Directory.CreateDirectory(outputDirectory);
 
-            string filePath = Path.Combine(outputDirectory, "mailing.csv");
-            Logger.Info($"Output file: {filePath}");
+            string cleanFilePath = Path.Combine(outputDirectory, "clean_list.csv");
+            Logger.Info($"Output file: {cleanFilePath}");
 
 
-            int recordCount = 10000;
+            int recordCount = 500;
             Logger.Info($"Requested record count: {recordCount:N0}");
 
-            CsvExporter.Export(filePath, recordCount);
+            CsvExporter.Export(cleanFilePath, recordCount);
 
             Logger.Info($"Finished generating {recordCount:N0} records");
         }

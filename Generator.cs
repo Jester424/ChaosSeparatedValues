@@ -13,7 +13,7 @@ namespace ChaosSeparatedValues
             .RuleFor(x => x.State, f => f.Address.StateAbbr())
             .RuleFor(x => x.Zip, f => f.Address.ZipCode());
 
-        public static MailingRecord Generate(int recordCount)
+        public static MailingRecord Generate()
         {
             return faker.Generate();
         }
