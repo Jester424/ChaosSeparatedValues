@@ -40,7 +40,7 @@ namespace ChaosSeparatedValues
             for (int i = 0; i < recordCount; i++)
             {
                 var record = Generator.Generate();
-                CsvExporter.WriteRecord(csv, Generator.Generate());
+                CsvExporter.WriteRecord(csv, record);
 
                 if (i % 1000 == 0 && i != 0)
                 {
