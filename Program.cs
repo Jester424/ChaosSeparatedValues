@@ -3,6 +3,7 @@ using System.IO;
 using Bogus;
 using CsvHelper;
 using System.Globalization;
+using System.CodeDom.Compiler;
 
 namespace ChaosSeparatedValues
 {
@@ -23,10 +24,50 @@ namespace ChaosSeparatedValues
             logger.Info($"Clean output file: {cleanFilePath}");
 
 
+
+
+
+
+
+
             int recordCount = 10000;
             logger.Info($"Requested record count: {recordCount:N0}");
 
-            CsvExporter.Export(cleanFilePath, recordCount, logger);
+            using var writer = new StreamWriter(cleanFilePath);
+            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            CsvExporter.WriteHeader(csv);
+
+            for (int i = 0; i < recordCount; i++)
+            {
+                var record = Generator.Generate();
+                CsvExporter.WriteRecord(csv, Generator.Generate());
+
+                if (i % 1000 == 0 && i != 0)
+                {
+                    logger.Info($"Generated {i:N0} records");
+                }
+            }
+
+
+
+            // CsvExporter.Export(cleanFilePath, recordCount, logger);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             logger.Info($"Finished generating {recordCount:N0} records");
             logger.Info($"Beginning data degradation");
@@ -38,8 +79,8 @@ namespace ChaosSeparatedValues
             using var reader = new StreamReader(cleanFilePath);
             using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-            using var writer = new StreamWriter(degradedFilePath);
-            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            using var xwriter = new StreamWriter(degradedFilePath);
+            using var csvWriter = new CsvWriter(xwriter, CultureInfo.InvariantCulture);
 
             csvWriter.WriteHeader<MailingRecord>();
             csvWriter.NextRecord();
