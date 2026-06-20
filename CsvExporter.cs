@@ -16,6 +16,7 @@ namespace ChaosSeparatedValues
         public static void WriteRecord(CsvWriter csv, MailingRecord record)
         {
             csv.WriteRecord(record);
+            csv.NextRecord();
         }
     }
 }

@@ -71,8 +71,11 @@ namespace ChaosSeparatedValues
 
             var random = new Random();
             int degradedRecordCount = 0;
+            int totalRecords = 0;
             foreach (var record in csvReader.GetRecords<MailingRecord>())
             {
+                totalRecords++;
+
                 if (random.NextDouble() < degradationRate)
                 {
                     degradedRecordCount++;
@@ -81,6 +84,7 @@ namespace ChaosSeparatedValues
                 csv.WriteRecord(record);
                 csv.NextRecord();
             }
+            logger.Info($"Read {totalRecords} records");
             logger.Info($"Degradation complete for {degradedRecordCount} records");
         }
     }
