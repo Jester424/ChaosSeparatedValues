@@ -12,18 +12,19 @@ namespace ChaosSeparatedValues
         public static void Main(string[] args)
         {
             var appContext = new AppContext();
-
-            string outputDirectory = appContext.RunName;
-            Directory.CreateDirectory(outputDirectory);
-            
             var logger = new Logger(appContext);
+
+            var outputDirectory = appContext.RunName;
+            Directory.CreateDirectory(outputDirectory);
 
             logger.Info("Program started");
 
-            string cleanFilePath = Path.Combine(outputDirectory, "clean_list.csv");
+            var cleanFilePath = Path.Combine(outputDirectory, "clean_list.csv");
+            var degradedFilePath = Path.Combine(outputDirectory, "degraded_list.csv");
+
             logger.Info($"Clean output file: {cleanFilePath}");
 
-            int recordCount = 10000;
+            var recordCount = 10_000;
 
             GenerateCleanDataFile(logger, cleanFilePath, recordCount);
 
@@ -31,7 +32,6 @@ namespace ChaosSeparatedValues
             logger.Info($"Beginning data degradation");
             Thread.Sleep(2000);
 
-            string degradedFilePath = Path.Combine(outputDirectory, "degraded_list.csv");
             logger.Info($"Degraded output file: {degradedFilePath}");
 
             GenerateDegradedDataFile(logger, cleanFilePath, degradedFilePath);
