@@ -21,6 +21,7 @@ namespace ChaosSeparatedValues
 
             var cleanFilePath = Path.Combine(outputDirectory, "clean_list.csv");
             var degradedFilePath = Path.Combine(outputDirectory, "degraded_list.csv");
+            var qualityReportPath = Path.Combine(outputDirectory, "data_report.txt");
 
             logger.Info($"Clean output file: {cleanFilePath}");
 
@@ -35,11 +36,9 @@ namespace ChaosSeparatedValues
             logger.Info($"Degraded output file: {degradedFilePath}");
 
             GenerateDegradedDataFile(logger, cleanFilePath, degradedFilePath);
+
+            GenerateDataReport(logger, degradedFilePath, qualityReportPath);
         }
-
-
-
-
 
         private static void GenerateCleanDataFile(Logger logger, string cleanFilePath, int recordCount)
         {
@@ -59,10 +58,6 @@ namespace ChaosSeparatedValues
                 }
             }
         }
-
-
-
-
 
         private static void GenerateDegradedDataFile(Logger logger, string cleanFilePath, string degradedFilePath)
         {
@@ -92,6 +87,50 @@ namespace ChaosSeparatedValues
             }
             logger.Info($"Read {totalRecords:N0} records");
             logger.Info($"Degradation complete for {degradedRecordCount:N0} records");
+        }
+
+        private static void GenerateDataReport(Logger logger, string degradedFilePath, string qualityReportPath)
+        {
+            using var reader = new StreamReader(degradedFilePath);
+            using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            var issues = new List<DataQualityIssue>();
+
+            var recordsExamined = 0;
+
+            foreach (var record in csvReader.GetRecords<MailingRecord>())
+            {
+                recordsExamined++;
+                if (string.IsNullOrWhiteSpace(record.City))
+                {
+                    issues.Add(new DataQualityIssue(
+                        record.Id.ToString(),
+                        nameof(record.City),
+                        "City is missing"));
+                }
+            }
+
+            var issuesFound = issues.Count;
+
+            using var writer = new StreamWriter(qualityReportPath);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csvWriter.WriteComment($"Records examined: {recordsExamined:N0}");
+            csvWriter.NextRecord();
+            csvWriter.NextRecord();
+
+            csvWriter.WriteComment($"Issues found: {issuesFound:N0}");
+            csvWriter.NextRecord();
+            csvWriter.NextRecord();
+
+            csvWriter.WriteHeader<DataQualityIssue>();
+            csvWriter.NextRecord();
+
+            foreach (var issue in issues)
+            {
+                csvWriter.WriteRecord(issue);
+                csvWriter.NextRecord();
+            }
         }
     }
 }
