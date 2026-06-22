@@ -31,7 +31,6 @@ namespace ChaosSeparatedValues
 
             logger.Info($"Finished generating {recordCount:N0} records");
             logger.Info($"Beginning data degradation");
-            Thread.Sleep(2000);
 
             logger.Info($"Degraded output file: {degradedFilePath}");
 
